@@ -37,5 +37,10 @@ public class CarMakeController {
     public String updateCarMake(@RequestBody CarMake carMake){
         return carMakeService.updateCarMake(carMake);
     }
+
+    @GetMapping("/all")
+    public Iterable<CarMake> getAllCarMake(){
+        return carMakeService.findAll();
+    }
 }
 

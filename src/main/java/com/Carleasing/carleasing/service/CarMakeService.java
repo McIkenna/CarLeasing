@@ -9,7 +9,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.S3Link;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.amazonaws.services.s3.AmazonS3;
@@ -36,6 +36,7 @@ public class CarMakeService implements CarMakeRepository {
 
     private Logger logger = LoggerFactory.getLogger(CarMakeService.class);
 
+
     @Autowired
     DynamoDBMapper mapper;
 
@@ -46,14 +47,21 @@ public class CarMakeService implements CarMakeRepository {
     @Override
     public CarMake save(MultipartFile multipartFile, CarMake carMake){
         try{
+
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
-            String fileUrl = CommonUtils.SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_NAME + "/" + fileName;
-            S3Link s3link = mapper.createS3Link(CommonUtils.BUCKET_NAME, fileUrl);
-            carMake.setCarImageUrl(s3link);
+            String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_NAME + "/" + fileName;
+
+           // S3Link s3Link = mapper.createS3Link(CommonUtils.REGION,CommonUtils.BUCKET_NAME, fileUrl);
+
+            /*String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(s3Link.toString())
+                    .toUriString();*/
+            carMake.setCarImageUrl(fileUrl);
             mapper.save(carMake);
             s3client.putObject(
                     new PutObjectRequest(CommonUtils.BUCKET_NAME, fileName , file));
+
 
         }/*catch (Exception e) {
 			e.printStackTrace();
@@ -92,10 +100,11 @@ public class CarMakeService implements CarMakeRepository {
     @Override
     public String deleteCarMake(String makeId) {
         try{
-
-            mapper.delete(makeId);
-            s3client.deleteObject(new DeleteObjectRequest(CommonUtils.BUCKET_NAME + "/", makeId));
-            return "Vehicle deleted !!";
+            CarMake make = mapper.load(CarMake.class, makeId);
+            mapper.delete(make);
+            String fileName = make.getCarImageUrl().substring(make.getCarImageUrl().lastIndexOf("/") + 1);
+            s3client.deleteObject(new DeleteObjectRequest(CommonUtils.BUCKET_NAME + "/" ,fileName) );
+            return "CarMake deleted !!";
         }
         catch(Exception ex){
             throw new VehicleException("This Vehicle Cannot be deleted");
@@ -124,8 +133,8 @@ public class CarMakeService implements CarMakeRepository {
 
 
     @Override
-    public Iterable<CarMake> findall() {
-        return null;
+    public Iterable<CarMake> findAll() {
+        return mapper.scan(CarMake.class, new DynamoDBScanExpression());
     }
 
     private String generateFileName(MultipartFile multiPart) {

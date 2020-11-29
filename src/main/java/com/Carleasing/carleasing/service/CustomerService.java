@@ -48,7 +48,6 @@ public class CustomerService implements CustomerRepository {
     }
 
     private DynamoDBSaveExpression buildExpression(Customer customer){
-
         DynamoDBSaveExpression dynamoDBSaveExpression = new DynamoDBSaveExpression();
         Map<String, ExpectedAttributeValue> expectedMap=new HashMap<>();
         expectedMap.put("customerId", new ExpectedAttributeValue((new AttributeValue().withS(customer.getCustomerId()))));

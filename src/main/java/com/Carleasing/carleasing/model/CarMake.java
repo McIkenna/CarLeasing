@@ -17,6 +17,6 @@ public class CarMake {
     @DynamoDBAttribute
     private String make;
     @DynamoDBAttribute
-    private S3Link carImageUrl;
+    private String carImageUrl;
 
 }

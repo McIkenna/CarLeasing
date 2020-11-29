@@ -5,6 +5,7 @@ import com.Carleasing.carleasing.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
@@ -15,8 +16,8 @@ public class VehicleController {
     VehicleService vehicleService;
 
     @PostMapping(" ")
-    public Vehicle saveVehicle(@RequestBody Vehicle vehicle){
-        return vehicleService.save(vehicle);
+    public Vehicle saveVehicle(@RequestParam(value = "file") MultipartFile file, Vehicle vehicle){
+        return vehicleService.save(file, vehicle);
     }
 
     @GetMapping("/{vehicleId}")

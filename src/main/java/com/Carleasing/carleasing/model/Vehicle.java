@@ -39,6 +39,8 @@ public class Vehicle {
     private double leasePrice;
     @DynamoDBAttribute
     private int quantity;
+    @DynamoDBAttribute
+    private String carImage;
 
 
 }

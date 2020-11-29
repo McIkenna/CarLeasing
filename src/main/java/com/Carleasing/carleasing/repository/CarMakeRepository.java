@@ -13,5 +13,5 @@ public interface CarMakeRepository {
     String deleteCarMake(String makeId);
     String updateCarMake(CarMake carMake);
 
-    Iterable<CarMake> findall();
+    Iterable<CarMake> findAll();
 }
