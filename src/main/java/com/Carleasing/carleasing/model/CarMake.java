@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @DynamoDBDocument
 @Data
 @AllArgsConstructor
@@ -18,5 +20,7 @@ public class CarMake {
     private String make;
     @DynamoDBAttribute
     private String carImageUrl;
+    @DynamoDBAttribute
+    private List<Vehicle> vehicles;
 
 }

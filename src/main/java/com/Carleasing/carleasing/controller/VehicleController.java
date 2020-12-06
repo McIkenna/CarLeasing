@@ -20,9 +20,14 @@ public class VehicleController {
         return vehicleService.save(file, vehicle);
     }
 
-    @GetMapping("/{vehicleId}")
-    public Vehicle findVehicle(@PathVariable String vehicleId){
-        return vehicleService.findVehicle(vehicleId);
+    @GetMapping("/{makeId}")
+    public Iterable<Vehicle> findVehicle(@PathVariable String makeId){
+        return vehicleService.findVehicle(makeId);
+    }
+
+    @GetMapping("/{makeId}/{vehicleId}")
+    public Vehicle findVehicleByMakeId(@PathVariable String makeId, @PathVariable String vehicleId){
+        return vehicleService.findVehicleByMakeId(makeId, vehicleId);
     }
 
     @DeleteMapping("/{vehicleId}")

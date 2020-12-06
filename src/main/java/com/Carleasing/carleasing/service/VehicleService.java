@@ -8,6 +8,7 @@ import com.Carleasing.carleasing.repository.VehicleRepository;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -26,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -47,7 +49,7 @@ public class VehicleService implements VehicleRepository {
             String fileName = generateFileName(multipartFile);
             String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_MODEL_NAME + "/" + fileName;
 
-        vehicle.setCarImage(fileUrl);
+            vehicle.setCarImage(fileUrl);
             mapper.save(vehicle);
         s3Client.putObject(
                 new PutObjectRequest(CommonUtils.BUCKET_MODEL_NAME, fileName , file));
@@ -73,12 +75,29 @@ public class VehicleService implements VehicleRepository {
         return  vehicle;
 }
 
-    @Override
-    public Vehicle findVehicle(String vehicleId) {
-     return mapper.load(Vehicle.class, vehicleId);
 
+    public List<Vehicle> findVehicle(String makeId) {
+        Vehicle newVeh = new Vehicle();
+        newVeh.setMakeId(makeId);
+        DynamoDBQueryExpression<Vehicle> queryExpression = new DynamoDBQueryExpression<Vehicle>()
+                .withHashKeyValues(newVeh);
+
+
+        List<Vehicle> result = mapper.query(Vehicle.class, queryExpression);
+
+        return result;
     }
 
+    @Override
+    public Vehicle findVehicleByMakeId(String makeId, String vehicleId) {
+        return mapper.load(Vehicle.class, makeId, vehicleId) ;
+    }
+
+    /*
+        public Vehicle findVehicleByMakeId(String makeId) {
+            return mapper.load(Vehicle.class, makeId);
+        }
+    */
     @Override
     public String deleteVehicle(String vehicleId) {
         try {
