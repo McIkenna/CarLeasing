@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @SpringBootApplication
 @RequestMapping("/api/carMake")
+@CrossOrigin
 public class CarMakeController {
 
 

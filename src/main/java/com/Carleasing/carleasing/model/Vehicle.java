@@ -22,13 +22,13 @@ public class Vehicle {
     @DynamoDBAttribute
     private String style;
     @DynamoDBAttribute
-    private String year;
+    private Long year;
     @DynamoDBAttribute
     private String trimLevel;
     @DynamoDBAttribute
     private String color;
     @DynamoDBAttribute
-    private int odometer;
+    private Long odometer;
     @DynamoDBAttribute
     private String regNo;
     @DynamoDBAttribute
@@ -43,6 +43,8 @@ public class Vehicle {
     private int quantity;
     @DynamoDBAttribute
     private String carImage;
+    @DynamoDBAttribute
+    private CarMake carMake;
     
 
 

@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface VehicleRepository{
 
-    Vehicle save(MultipartFile multipartFile, Vehicle vehicle);
+    Vehicle save(MultipartFile multipartFile, Vehicle vehicle, String makeId);
     List<Vehicle> findVehicle(String makeId);
 
     Vehicle findVehicleByMakeId(String makeId, String vehicleId);
