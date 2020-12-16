@@ -2,8 +2,10 @@ package com.Carleasing.carleasing.service;
 
 
 import com.Carleasing.carleasing.exception.VehicleException;
+import com.Carleasing.carleasing.model.CarMake;
 import com.Carleasing.carleasing.model.CommonUtils;
 import com.Carleasing.carleasing.model.Vehicle;
+import com.Carleasing.carleasing.repository.CarMakeRepository;
 import com.Carleasing.carleasing.repository.VehicleRepository;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -40,16 +42,21 @@ public class VehicleService implements VehicleRepository {
     private DynamoDBMapper mapper;
 
     @Autowired
+    CarMakeRepository carMakeRepository;
+    @Autowired
     AmazonS3 s3Client;
 
     @Override
-    public Vehicle save(MultipartFile multipartFile, Vehicle vehicle) {
+    public Vehicle save(MultipartFile multipartFile, Vehicle vehicle, String makeId) {
         try{
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
             String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_MODEL_NAME + "/" + fileName;
 
             vehicle.setCarImage(fileUrl);
+            CarMake carMake = carMakeRepository.findCarMake(makeId);
+            vehicle.setCarMake(carMake);
+            vehicle.setMakeId(makeId);
             mapper.save(vehicle);
         s3Client.putObject(
                 new PutObjectRequest(CommonUtils.BUCKET_MODEL_NAME, fileName , file));

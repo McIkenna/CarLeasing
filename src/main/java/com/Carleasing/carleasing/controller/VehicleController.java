@@ -9,15 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
+@CrossOrigin
 @RequestMapping("/api/vehicle")
 public class VehicleController {
 
     @Autowired
     VehicleService vehicleService;
 
-    @PostMapping(" ")
-    public Vehicle saveVehicle(@RequestParam(value = "file") MultipartFile file, Vehicle vehicle){
-        return vehicleService.save(file, vehicle);
+    @PostMapping("/{makeId}")
+    public Vehicle saveVehicle(@RequestParam(value = "file") MultipartFile file, Vehicle vehicle, @PathVariable String makeId){
+        return vehicleService.save(file, vehicle, makeId);
     }
 
     @GetMapping("/{makeId}")

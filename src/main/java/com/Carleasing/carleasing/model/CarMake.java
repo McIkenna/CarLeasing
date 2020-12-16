@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @DynamoDBDocument
@@ -21,6 +22,6 @@ public class CarMake {
     @DynamoDBAttribute
     private String carImageUrl;
     @DynamoDBAttribute
-    private List<Vehicle> vehicles;
+    private List<Vehicle> vehicles = new ArrayList<>();
 
 }

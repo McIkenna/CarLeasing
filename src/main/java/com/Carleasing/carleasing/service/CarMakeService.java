@@ -47,7 +47,6 @@ public class CarMakeService implements CarMakeRepository {
     @Override
     public CarMake save(MultipartFile multipartFile, CarMake carMake){
         try{
-
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
             String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_NAME + "/" + fileName;
@@ -61,8 +60,6 @@ public class CarMakeService implements CarMakeRepository {
             mapper.save(carMake);
             s3client.putObject(
                     new PutObjectRequest(CommonUtils.BUCKET_NAME, fileName , file));
-
-
         }/*catch (Exception e) {
 			e.printStackTrace();
 		}*/
