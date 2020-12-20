@@ -14,7 +14,7 @@ public interface VehicleRepository{
 
     Vehicle findVehicleByMakeId(String makeId, String vehicleId);
     String deleteVehicle(String vehicleId);
-    String updateVehicle(Vehicle vehicle);
+    String updateVehicle(MultipartFile multipartFile, Vehicle vehicle);
 
     Iterable<Vehicle> findAll();
 }

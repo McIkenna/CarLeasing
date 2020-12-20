@@ -31,9 +31,6 @@ import java.util.Map;
 @Service
 public class CarMakeService implements CarMakeRepository {
 
-
-
-
     private Logger logger = LoggerFactory.getLogger(CarMakeService.class);
 
 
@@ -109,13 +106,25 @@ public class CarMakeService implements CarMakeRepository {
     }
 
     @Override
-    public String updateCarMake(CarMake carMake) {
+    public String updateCarMake(MultipartFile multipartFile, CarMake make) {
         try {
-            mapper.save(carMake, buildExpression(carMake));
+            File file = convertMultiPartToFile(multipartFile);
+            String fileName = generateFileName(multipartFile);
+            String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_NAME + "/" + fileName;
+
+            // S3Link s3Link = mapper.createS3Link(CommonUtils.REGION,CommonUtils.BUCKET_NAME, fileUrl);
+
+            /*String downloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(s3Link.toString())
+                    .toUriString();*/
+            make.setCarImageUrl(fileUrl);
+            mapper.save(make, buildExpression(make));
+            s3client.putObject(
+                    new PutObjectRequest(CommonUtils.BUCKET_NAME, fileName , file));
             return "record Updated";
         }
         catch(Exception e){
-            throw new VehicleException("This user '" + carMake.getMake() + "' already exist");
+            throw new VehicleException("This user '" + make.getMake() + "' already exist");
         }
     }
 

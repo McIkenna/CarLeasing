@@ -11,7 +11,7 @@ public interface CarMakeRepository {
     CarMake save(MultipartFile multipartFile, CarMake carMake);
     CarMake findCarMake(String makeId);
     String deleteCarMake(String makeId);
-    String updateCarMake(CarMake carMake);
+    String updateCarMake(MultipartFile multipartFile, CarMake carMake);
 
     Iterable<CarMake> findAll();
 }

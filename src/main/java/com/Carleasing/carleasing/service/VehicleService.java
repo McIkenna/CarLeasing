@@ -55,6 +55,7 @@ public class VehicleService implements VehicleRepository {
 
             vehicle.setCarImage(fileUrl);
             CarMake carMake = carMakeRepository.findCarMake(makeId);
+            vehicle.setMake(carMake.getMake());
             vehicle.setCarMake(carMake);
             vehicle.setMakeId(makeId);
             mapper.save(vehicle);
@@ -89,7 +90,6 @@ public class VehicleService implements VehicleRepository {
         DynamoDBQueryExpression<Vehicle> queryExpression = new DynamoDBQueryExpression<Vehicle>()
                 .withHashKeyValues(newVeh);
 
-
         List<Vehicle> result = mapper.query(Vehicle.class, queryExpression);
 
         return result;
@@ -119,11 +119,22 @@ public class VehicleService implements VehicleRepository {
     }
 
     @Override
-    public String updateVehicle(Vehicle vehicle) {
+    public String updateVehicle(MultipartFile multipartFile, Vehicle vehicle) {
+        try{
+            File file = convertMultiPartToFile(multipartFile);
+            String fileName = generateFileName(multipartFile);
+            String fileUrl = CommonUtils.S3SERVICE_ENDPOINT + "/" + CommonUtils.BUCKET_MODEL_NAME + "/" + fileName;
+            vehicle.setCarImage(fileUrl);
             mapper.save(vehicle, buildExpression(vehicle));
+            s3Client.putObject(
+                    new PutObjectRequest(CommonUtils.BUCKET_NAME, fileName , file));
             return "record Updated";
-    }
 
+        }
+            catch(Exception e){
+            throw new VehicleException("This model '" + vehicle.getModel() + "' already exist");
+        }
+    }
 
 
     private DynamoDBSaveExpression buildExpression(Vehicle vehicle){

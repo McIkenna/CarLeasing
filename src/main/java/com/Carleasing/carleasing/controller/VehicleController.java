@@ -9,8 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @SpringBootApplication
-@CrossOrigin
 @RequestMapping("/api/vehicle")
+@CrossOrigin
 public class VehicleController {
 
     @Autowired
@@ -36,9 +36,9 @@ public class VehicleController {
         return vehicleService.deleteVehicle(vehicleId);
     }
 
-    @PutMapping("/updateVehicle")
-    public String updateVehicle(@RequestBody Vehicle vehicle){
-        return vehicleService.updateVehicle(vehicle);
+    @PutMapping("")
+    public String updateVehicle(@RequestParam(value = "file") MultipartFile file,Vehicle vehicle){
+        return vehicleService.updateVehicle(file, vehicle);
     }
 
     @GetMapping("/all")
