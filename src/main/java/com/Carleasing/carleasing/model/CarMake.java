@@ -22,6 +22,8 @@ public class CarMake {
     @DynamoDBAttribute
     private String carImageUrl;
     @DynamoDBAttribute
+    private String fileName;
+    @DynamoDBAttribute
     private List<Vehicle> vehicles = new ArrayList<>();
 
 }

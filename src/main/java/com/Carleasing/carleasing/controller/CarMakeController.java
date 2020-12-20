@@ -34,9 +34,9 @@ public class CarMakeController {
         return carMakeService.deleteCarMake(makeId);
     }
 
-    @PutMapping("/updateMakeId")
-    public String updateCarMake(@RequestBody CarMake carMake){
-        return carMakeService.updateCarMake(carMake);
+    @PutMapping("")
+    public String updateCarMake(@RequestParam(value = "file") MultipartFile file, CarMake carMake){
+        return carMakeService.updateCarMake(file, carMake);
     }
 
     @GetMapping("/all")
