@@ -36,20 +36,9 @@ public class Vehicle {
     @DynamoDBAttribute
     private double carValue;
     @DynamoDBAttribute
-    private int period;
-    @DynamoDBAttribute
-    private String plan;
-    @DynamoDBAttribute
-    private double leasePrice;
-    @DynamoDBAttribute
-    private int quantity;
-    @DynamoDBAttribute
     private String carImage;
     @DynamoDBAttribute
     private String imageName;
     @DynamoDBAttribute
     private CarMake carMake;
-    
-
-
 }
